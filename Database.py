@@ -1,99 +1,34 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import os
-import csv
-from datetime import datetime
 
 DATA_FILE = "data_penjualan.csv"
 
-st.set_page_config(
-    page_title="Manajemen UMKM",
-    layout="wide"
-)
-
-# ===============================
-# LOAD DATA (CSV PERSISTENT)
-# ===============================
-if os.path.exists(DATA_FILE):
-    data_penjualan = pd.read_csv(DATA_FILE)
-    data_penjualan["Tanggal"] = pd.to_datetime(data_penjualan["Tanggal"])
-else:
-    data_penjualan = pd.DataFrame(
-        columns=["Tanggal", "Produk", "Jumlah", "Harga", "Total"]
-    )
-
-
-# INIT SESSION STATE
-
-if "data_penjualan" not in st.session_state:
-    st.session_state.data_penjualan = data_penjualan.copy()
-    
-def database():
-    st.title("Database UMKM")
-    st.markdown("### Data Penjualan")
-
-    df = st.session_state.data_penjualan
-    df["Tanggal"] = pd.to_datetime(df["Tanggal"])
-
-    produk_filter = st.multiselect(
-        "Filter Produk",
-        options=sorted(df["Produk"].dropna().unique()),
-        default=sorted(df["Produk"].dropna().unique())
-    )
-
-    if not df.empty:
-        min_tanggal = df["Tanggal"].min().date()
-        max_tanggal = max(df["Tanggal"].max().date(), datetime.today().date())
+def load_data():
+    if os.path.exists(DATA_FILE):
+        df = pd.read_csv(DATA_FILE)
+        df["Tanggal"] = pd.to_datetime(df["Tanggal"])
     else:
-        min_tanggal = max_tanggal = datetime.today().date()
+        df = pd.DataFrame(
+            columns=["Tanggal", "Produk", "Jumlah", "Harga", "Total"]
+        )
+    return df
 
-    tanggal_filter = st.date_input(
-        "Filter Tanggal",
-        value=(min_tanggal, max_tanggal)
-    )
+def save_data(df):
+    df.to_csv(DATA_FILE, index=False)
 
-    start_date = pd.to_datetime(tanggal_filter[0])
-    end_date = pd.to_datetime(tanggal_filter[1]) + pd.Timedelta(days=1)
+def show(df):
+    st.title("Database Penjualan")
 
-    filtered_data = df[
-        (df["Produk"].isin(produk_filter)) &
-        (df["Tanggal"] >= start_date) &
-        (df["Tanggal"] < end_date)
-    ]
+    if df.empty:
+        st.info("Belum ada data penjualan")
+        return
 
-    st.dataframe(filtered_data, use_container_width=True)
+    st.subheader("Proporsi Omzet per Produk")
 
-    # ===============================
-    # TAMBAH DATA
-    # ===============================
-    st.markdown("### Tambah Data Baru")
-    with st.form("tambah_data", clear_on_submit=True):
-        tanggal = st.date_input("Tanggal", value=datetime.today())
-        produk = st.text_input("Produk")
-        jumlah = st.number_input("Jumlah", min_value=1, step=1)
-        harga = st.number_input("Harga", min_value=1000, step=1000)
-        submit = st.form_submit_button("Simpan")
+    chart_data = df.groupby("Produk")["Total"].sum()
 
-        if submit:
-            if not produk.strip():
-                st.error("Nama produk tidak boleh kosong")
-                return
+    st.bar_chart(chart_data)
 
-            data_baru = {
-                "Tanggal": pd.to_datetime(tanggal),
-                "Produk": produk,
-                "Jumlah": jumlah,
-                "Harga": harga,
-                "Total": jumlah * harga
-            }
-
-            st.session_state.data_penjualan = pd.concat(
-                [df, pd.DataFrame([data_baru])],
-                ignore_index=True
-            )
-
-            st.session_state.data_penjualan.to_csv(DATA_FILE, index=False)
-            st.success("Data berhasil disimpan")
-            st.rerun()
+    st.subheader("Tabel Database")
+    st.dataframe(df, use_container_width=True)
