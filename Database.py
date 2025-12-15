@@ -24,21 +24,43 @@ def show(df):
         st.info("Belum ada data penjualan")
         return
 
+    # =====================
+    # CHART
+    # =====================
     st.subheader("Proporsi Omzet per Produk")
-
     chart_data = df.groupby("Produk")["Total"].sum()
-
     st.bar_chart(chart_data)
 
+    st.divider()
+
+    # =====================
+    # TABLE
+    # =====================
     st.subheader("Tabel Database")
     st.dataframe(df, use_container_width=True)
-    
-def show(df):
-    st.title("Database Penjualan")
-    st.dataframe(df, use_container_width=True)
 
-    if st.button("Hapus Semua Data"):
-        df = df.iloc[0:0]
-        df.to_csv("data_penjualan.csv", index=False)
+    st.divider()
+
+    # =====================
+    # DELETE ONE DATA
+    # =====================
+    st.subheader("Hapus Satu Data")
+
+    pilihan = df.apply(
+        lambda x: f"{x['Tanggal'].date()} | {x['Produk']} | Qty: {x['Jumlah']} | Rp {x['Total']}",
+        axis=1
+    )
+
+    selected = st.selectbox(
+        "Pilih data yang akan dihapus",
+        options=pilihan
+    )
+
+    if st.button("Hapus Data Terpilih"):
+        index_hapus = pilihan[pilihan == selected].index[0]
+        df = df.drop(index_hapus)
+
+        save_data(df)
         st.session_state.data = df
-        st.warning("Semua data berhasil dihapus")
+
+        st.success("Data berhasil dihapus")

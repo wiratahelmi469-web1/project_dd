@@ -20,7 +20,7 @@ st.markdown("""
     background-color:#ffcda5;
 }
 h1,h2,h3{
-    color:orange !important;
+    color: bold !important;
 }
 p{
     font-size: 20px !important;            
@@ -36,64 +36,59 @@ p{
     background-color: #F9FAFB;
 }
 
-h1, h2, h3 {
-    color: #FF8C42;
-    font-weight: 700;
-}
-
 /* ===== SIDEBAR ===== */
 [data-testid="stSidebar"] {
-    background-color: #FFE1C4;
-    padding-top: 20px;
+    background-color: #FFE1C4 !important;
+    padding-top: 20px !important;
 }
 
 /* ===== CARD STYLE ===== */
 .card {
-    background-color: #FFFFFF;
-    padding: 20px;
-    border-radius: 14px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
+    background-color: #FFFFFF !important;
+    padding: 20px !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important;
+    margin-bottom: 20px !important;
 }
 
 /* ===== METRIC ===== */
 [data-testid="metric-container"] {
-    background-color: #FFFFFF;
-    border-radius: 14px;
-    padding: 18px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    background-color: #FFFFFF !important;
+    border-radius: 14px !important;
+    padding: 18px !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important;
 }
 
 [data-testid="metric-container"] > div {
-    font-size: 18px;
+    font-size: 18px !important;
 }
 
 /* ===== BUTTON ===== */
 button[kind="primary"] {
-    background-color: #FF8C42;
-    border-radius: 10px;
-    border: none;
+    background-color: #FF8C42 !important;
+    border-radius: 10px !important;
+    border: none !important;
 }
 
 button:hover {
-    opacity: 0.9;
+    opacity: 0.9 !important;
 }
 
 /* ===== TABLE ===== */
 [data-testid="stDataFrame"] {
-    background-color: white;
-    border-radius: 12px;
-    padding: 10px;
+    background-color: white !important;
+    border-radius: 12px !important;
+    padding: 10px !important;
 }
 
 /* ===== DIVIDER ===== */
 hr {
-    border-top: 2px solid #FFE1C4;
+    border-top: 2px solid #FFE1C4 !important;
 }
 
 /* ===== FOOTER SAFE SPACE ===== */
 footer {
-    visibility: hidden;
+    visibility: hidden !important;
 }
 </style>
 """, unsafe_allow_html=True)
