@@ -32,3 +32,13 @@ def show(df):
 
     st.subheader("Tabel Database")
     st.dataframe(df, use_container_width=True)
+    
+def show(df):
+    st.title("Database Penjualan")
+    st.dataframe(df, use_container_width=True)
+
+    if st.button("Hapus Semua Data"):
+        df = df.iloc[0:0]
+        df.to_csv("data_penjualan.csv", index=False)
+        st.session_state.data = df
+        st.warning("Semua data berhasil dihapus")
