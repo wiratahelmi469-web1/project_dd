@@ -145,3 +145,4 @@ elif menu == "Analisis Penjualan":
 elif menu == "Dokumentasi":
     Dokumentasi.show()
 footer()
+
